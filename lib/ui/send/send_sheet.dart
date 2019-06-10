@@ -885,14 +885,23 @@ class AppSendSheet {
       }
     }
     // Validate address
-    bool isContact = _sendAddressController.text.startsWith("@");
-    if (_sendAddressController.text.trim().isEmpty) {
+    String addressValue =  _sendAddressController.text.trim();
+    bool isContact = addressValue.startsWith("@");
+    bool isManta = addressValue.startsWith("manta") && (mwallet.MantaWallet.parseUrl(addressValue) != null);
+    if (addressValue.isEmpty) {
       isValid = false;
       setState(() {
         _addressValidationText = AppLocalization.of(context).addressMising;
         _pasteButtonVisible = true;
       });
-    } else if (!isContact && !Address(_sendAddressController.text).isValid()) {
+    } else if (isManta) {
+      isValid = true;
+      setState((){
+        _addressValidationText = "";
+        _pasteButtonVisible = true;
+      });
+
+    } else if (!isContact && !Address(addressValue).isValid()) {
       isValid = false;
       setState(() {
         _addressValidationText = AppLocalization.of(context).invalidAddress;
