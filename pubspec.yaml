@@ -59,7 +59,7 @@ dependencies:
 
   # Android/iOS path provider
   path_provider: ^1.1.0
-  
+
   # TouchID/FaceID
   local_auth:
     git:
@@ -72,7 +72,7 @@ dependencies:
 
   # SVG
   flutter_svg: ^0.12.4
-    
+
   # QR Codes
   qr_flutter: ^2.0.0+51 # Generator
   barcode_scan:
