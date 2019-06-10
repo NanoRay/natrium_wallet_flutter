@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:decimal/decimal.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:intl/intl.dart';
+import 'package:manta_dart/manta_wallet.dart' as mwallet;
 
 import 'package:natrium_wallet_flutter/appstate_container.dart';
 import 'package:natrium_wallet_flutter/dimens.dart';
@@ -24,6 +25,7 @@ import 'package:natrium_wallet_flutter/ui/util/formatters.dart';
 import 'package:natrium_wallet_flutter/ui/util/ui_util.dart';
 import 'package:natrium_wallet_flutter/util/numberutil.dart';
 import 'package:natrium_wallet_flutter/util/caseconverter.dart';
+import 'manta_send_confirm_sheet.dart';
 
 class AppSendSheet {
   FocusNode _sendAddressFocusNode;
@@ -542,6 +544,8 @@ class AppSendSheet {
                                           .mainBottomSheet(context);
                                     }
                                   });
+                                } else if (_sendAddressController.text.startsWith("manta")) {
+                                  MantaSendConfirmSheet(_sendAddressController.text).mainBottomSheet(context);
                                 } else if (validRequest) {
                                   AppSendConfirmSheet(
                                           _localCurrencyMode
