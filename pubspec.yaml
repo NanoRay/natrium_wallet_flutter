@@ -117,6 +117,9 @@ dependencies:
   # Service provider
   get_it: ^1.0.3+1
 
+  manta_dart:
+    path: ../manta-dart
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
