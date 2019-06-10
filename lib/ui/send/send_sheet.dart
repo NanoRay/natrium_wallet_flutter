@@ -584,10 +584,16 @@ class AppSendSheet {
                                       .then((value) {
                                     Address address = Address(value);
                                     if (!address.isValid()) {
-                                      UIUtil.showSnackbar(
+                                      if (value.startsWith("manta") && (mwallet.MantaWallet.parseUrl(value) != null)) {
+                                        setState(() {
+                                            _sendAddressController.text = value;
+                                        });
+                                      } else {
+                                        UIUtil.showSnackbar(
                                           AppLocalization.of(context)
                                               .qrInvalidAddress,
                                           context);
+                                      }
                                     } else {
                                       sl.get<DBHelper>()
                                           .getContactWithAddress(
