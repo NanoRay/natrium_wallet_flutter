@@ -69,7 +69,27 @@ class MantaSendConfirmSheet {
     }
   }
 
+  void _authenticateAndSend(BuildContext context, mmsg.PaymentRequestMessage payReq) async {
+    // authenticate the user and perform the payment by asking the server to do
+    // the nano transaction and then by send the final message to the manta
+    // processor with the payment details.
+    context = await _authenticate(context, payReq.merchant.name);
+    if (context == null) return;
+    await _startLoadAnimation(context);
+    final sc = StateContainer.of(context);
+    final dest = payReq.destinations[0];
+    bool sent = false;
+    var  processResponse;
+    processResponse = EventTaxiImpl.singleton().registerTo<ProcessEvent>().listen(
+      (event) {
+        processResponse.cancel();
+        if (!sent) _manta.sendPayment(
+          transactionHash: event.response.hash,
+          cryptoCurrency: "NANO");
+        sent = true;
     });
+    sc.requestSend(sc.wallet.frontier, dest.destination_address,
+      NumberUtil.getAmountAsRaw(mmsg.decimal_to_str(dest.amount)));
   }
 
   Widget _confirmDialog(BuildContext context, mmsg.PaymentRequestMessage payReq) {
@@ -261,24 +281,6 @@ class MantaSendConfirmSheet {
       child: child);
   }
 
-  _authenticateAndSend(BuildContext context, mmsg.PaymentRequestMessage payReq) async {
-    // authenticate the user and perform the payment by asking the server to do
-    // the nano transaction and then by send the final message to the manta
-    // processor with the payment details.
-    context = await _authenticate(context, payReq.merchant.name);
-    if (context == null) return;
-    // final nav = Navigator.of(context);
-    final sc = StateContainer.of(context);
-    final dest = payReq.destinations[0];
-    var  processResponse;
-    processResponse = EventTaxiImpl.singleton().registerTo<ProcessEvent>().listen(
-      (event) {
-        processResponse.cancel();
-        _manta.sendPayment(transactionHash: event.response.hash,
-          cryptoCurrency: "NANO");
-    });
-    sc.requestSend(sc.wallet.frontier, dest.destination_address,
-      NumberUtil.getAmountAsRaw(mmsg.decimal_to_str(dest.amount)));
   Future<void> _startLoadAnimation(BuildContext context) async {
     final theme = StateContainer.of(context).curTheme;
     animationOpen = true;
