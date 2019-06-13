@@ -67,11 +67,6 @@ class MantaSendConfirmSheet {
     }
   }
 
-  StatefulBuilder _modal(Widget child, {WillPopCallback onWillPop = null}) {
-    // Show a widget as modal
-    return StatefulBuilder(
-      builder: (BuildContext context, StateSetter setState) {
-        return WillPopScope(onWillPop: onWillPop, child: child);
     });
   }
 
@@ -247,6 +242,14 @@ class MantaSendConfirmSheet {
         ),
       ],
     );
+  }
+
+  StatefulBuilder _modal(Widget child, {WillPopCallback onWillPop = null}) {
+    // Show a widget as modal
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        return WillPopScope(onWillPop: onWillPop, child: child);
+    });
   }
 
   Widget _safe(BuildContext context, Widget child) {
