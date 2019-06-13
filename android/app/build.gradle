@@ -42,7 +42,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "co.banano.natriumwallet"
+        applicationId "com.beappia.natriumwallet"
         minSdkVersion 18
         targetSdkVersion 28
         multiDexEnabled true

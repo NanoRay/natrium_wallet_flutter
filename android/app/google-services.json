@@ -1,101 +1,37 @@
 {
   "project_info": {
-    "project_number": "716870170992",
-    "firebase_url": "https://natrium-edfa2.firebaseio.com",
-    "project_id": "natrium-edfa2",
-    "storage_bucket": "natrium-edfa2.appspot.com"
+    "project_number": "551783684107",
+    "firebase_url": "https://manta-natrium.firebaseio.com",
+    "project_id": "manta-natrium",
+    "storage_bucket": "manta-natrium.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:716870170992:android:3a068f6e99bf1a7d",
+        "mobilesdk_app_id": "1:551783684107:android:608408a34d984c7b",
         "android_client_info": {
-          "package_name": "co.banano.natriumwallet"
+          "package_name": "com.beappia.natriumwallet"
         }
       },
       "oauth_client": [
         {
-          "client_id": "716870170992-t4fpqi3lbap9k9cr3m785hdsd4geagj0.apps.googleusercontent.com",
+          "client_id": "551783684107-cmtuuambolobm57s1tn3hdnfnrbo32dc.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBC3NDZwVU5g9Y0JxqRj3aEnsF56r4g3nM"
+          "current_key": "AIzaSyD5AGnM_jaf3T4QbltJhrihN491Px8bQlo"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:716870170992:android:693a7e526e5dae98",
-        "android_client_info": {
-          "package_name": "com.avengemedia.natrium"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "716870170992-t4fpqi3lbap9k9cr3m785hdsd4geagj0.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBC3NDZwVU5g9Y0JxqRj3aEnsF56r4g3nM"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:716870170992:android:ea89e20d15da2256",
-        "android_client_info": {
-          "package_name": "com.banano.natriumwallet"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "716870170992-t4fpqi3lbap9k9cr3m785hdsd4geagj0.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBC3NDZwVU5g9Y0JxqRj3aEnsF56r4g3nM"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "551783684107-cmtuuambolobm57s1tn3hdnfnrbo32dc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
