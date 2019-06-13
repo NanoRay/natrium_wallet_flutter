@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:natrium_wallet_flutter/appstate_container.dart';
 import 'package:natrium_wallet_flutter/themes.dart';
 import 'package:natrium_wallet_flutter/ui/widgets/auto_resize_text.dart';
+import 'package:qr/qr.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class AppShareCard extends StatefulWidget {
