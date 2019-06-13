@@ -30,6 +30,8 @@ final Logger log = new Logger("Manta");
 class MantaSendConfirmSheet {
   mwallet.MantaWallet _manta;
 
+  bool animationOpen = false;
+
   MantaSendConfirmSheet(String url) {
     _manta = mwallet.MantaWallet(url);
   }
@@ -277,15 +279,19 @@ class MantaSendConfirmSheet {
     });
     sc.requestSend(sc.wallet.frontier, dest.destination_address,
       NumberUtil.getAmountAsRaw(mmsg.decimal_to_str(dest.amount)));
+  Future<void> _startLoadAnimation(BuildContext context) async {
+    final theme = StateContainer.of(context).curTheme;
+    animationOpen = true;
+    final loader = AnimationLoadingOverlay(AnimationType.SEND,
+      theme.animationOverlayStrong, theme.animationOverlayMedium,
+      onPoppedCallback: () => animationOpen = false);
+    Navigator.of(context).push(loader);
+    await loader.didPush();
   }
 
   mainBottomSheet(BuildContext context) async {
-    final theme = StateContainer.of(context).curTheme;
     final nav = Navigator.of(context);
-    final loader = AnimationLoadingOverlay(AnimationType.SEND,
-      theme.animationOverlayStrong, theme.animationOverlayMedium);
-    nav.push(loader);
-    await loader.didPush();
+    await _startLoadAnimation(context);
     await _manta.connect();
     final mmsg.PaymentRequestEnvelope payReqEnv = await _manta.getPaymentRequest(
       cryptoCurrency: "NANO");
