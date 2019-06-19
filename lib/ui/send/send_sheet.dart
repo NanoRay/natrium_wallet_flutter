@@ -586,6 +586,8 @@ class AppSendSheet {
                                       if (manta.isManta(value)) {
                                         setState(() {
                                             _sendAddressController.text = value;
+                                            _pasteButtonVisible = false;
+                                            _showContactButton = false;
                                         });
                                       } else {
                                         UIUtil.showSnackbar(
@@ -897,7 +899,7 @@ class AppSendSheet {
       isValid = true;
       setState((){
         _addressValidationText = "";
-        _pasteButtonVisible = true;
+        _pasteButtonVisible = false;
       });
 
     } else if (!isContact && !Address(addressValue).isValid()) {
