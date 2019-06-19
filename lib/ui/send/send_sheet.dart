@@ -1203,6 +1203,15 @@ class AppSendSheet {
                                 _sendAddressController.text = contact.name;
                               }
                             });
+                            setState(() {
+                                _isContact = false;
+                                _addressValidationText = "";
+                                _sendAddressStyle =
+                                AppStyles.textStyleAddressText90(context);
+                                _pasteButtonVisible = false;
+                                _showContactButton = false;
+                            });
+                            _sendAddressController.text = data.text;
                           }
                         });
                       },
