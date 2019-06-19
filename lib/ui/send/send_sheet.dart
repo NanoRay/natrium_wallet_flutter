@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:decimal/decimal.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:intl/intl.dart';
-import 'package:manta_dart/manta_wallet.dart' as mwallet;
 
 import 'package:natrium_wallet_flutter/appstate_container.dart';
 import 'package:natrium_wallet_flutter/dimens.dart';
@@ -25,7 +24,7 @@ import 'package:natrium_wallet_flutter/ui/util/formatters.dart';
 import 'package:natrium_wallet_flutter/ui/util/ui_util.dart';
 import 'package:natrium_wallet_flutter/util/numberutil.dart';
 import 'package:natrium_wallet_flutter/util/caseconverter.dart';
-import 'manta_send_confirm_sheet.dart';
+import 'manta_send_confirm_sheet.dart' as manta;
 
 class AppSendSheet {
   FocusNode _sendAddressFocusNode;
@@ -584,7 +583,7 @@ class AppSendSheet {
                                       .then((value) {
                                     Address address = Address(value);
                                     if (!address.isValid()) {
-                                      if (value.startsWith("manta") && (mwallet.MantaWallet.parseUrl(value) != null)) {
+                                      if (manta.isManta(value)) {
                                         setState(() {
                                             _sendAddressController.text = value;
                                         });
@@ -887,7 +886,7 @@ class AppSendSheet {
     // Validate address
     String addressValue =  _sendAddressController.text.trim();
     bool isContact = addressValue.startsWith("@");
-    bool isManta = addressValue.startsWith("manta") && (mwallet.MantaWallet.parseUrl(addressValue) != null);
+    bool isManta = manta.isManta(addressValue);
     if (addressValue.isEmpty) {
       isValid = false;
       setState(() {

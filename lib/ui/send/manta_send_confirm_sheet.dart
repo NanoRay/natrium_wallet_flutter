@@ -27,6 +27,10 @@ import 'package:natrium_wallet_flutter/ui/widgets/security.dart';
 
 final Logger log = new Logger("Manta");
 
+bool isManta(String candidate) {
+  return mwallet.MantaWallet.parseUrl(candidate) != null;
+}
+
 class MantaSendConfirmSheet {
   mwallet.MantaWallet _manta;
 
