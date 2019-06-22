@@ -343,28 +343,22 @@ class AppSendSheet {
         .then((contact) {
             if (contact == null) {
               setState(() {
-                  _addressValidationText =
-                  AppLocalization.of(context)
-                  .contactInvalid;
+                _addressValidationText = AppLocalization.of(context)
+                .contactInvalid;
               });
             } else {
               AppSendConfirmSheet(
                 _localCurrencyMode
-                ? NumberUtil.getAmountAsRaw(
-                  _convertLocalCurrencyToCrypto(
-                    context))
+                ? NumberUtil.getAmountAsRaw(_convertLocalCurrencyToCrypto(context))
                 : _rawAmount == null
-                ? NumberUtil.getAmountAsRaw(
-                  _sendAmountController
-                  .text)
+                ? NumberUtil.getAmountAsRaw(_sendAmountController.text)
                 : _rawAmount,
                 contact.address,
                 contactName: contact.name,
                 maxSend: _isMaxSend(context),
                 localCurrencyAmount:
                 _localCurrencyMode
-                ? _sendAmountController
-                .text
+                ? _sendAmountController.text
                 : null)
               .mainBottomSheet(context);
             }
@@ -374,20 +368,15 @@ class AppSendSheet {
       } else if (validRequest) {
         AppSendConfirmSheet(
           _localCurrencyMode
-          ? NumberUtil.getAmountAsRaw(
-            _convertLocalCurrencyToCrypto(
-              context))
-          : _rawAmount == null
-          ? NumberUtil.getAmountAsRaw(
-            _sendAmountController
-            .text)
-          : _rawAmount,
+            ? NumberUtil.getAmountAsRaw(_convertLocalCurrencyToCrypto(context))
+            : _rawAmount == null
+            ? NumberUtil.getAmountAsRaw(_sendAmountController.text)
+            : _rawAmount,
           _sendAddressController.text,
           maxSend: _isMaxSend(context),
-          localCurrencyAmount:
-          _localCurrencyMode
-          ? _sendAmountController.text
-          : null)
+          localCurrencyAmount: _localCurrencyMode
+            ? _sendAmountController.text
+            : null)
         .mainBottomSheet(context);
       }
     };
