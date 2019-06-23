@@ -274,7 +274,7 @@ class AppSendSheet {
         }
       } else {
         final Contact contact = await sl.get<DBHelper>().getContactWithAddress(
-          address.address)
+          address.address);
         _sendAddressFocusNode.unfocus();
         if (contact == null) {
           setState(() {
@@ -315,7 +315,7 @@ class AppSendSheet {
               // Indicate that this is a special amount if some digits are not displayed
               final String stringAmount = NumberUtil.getRawAsUsableString(_rawAmount)
                 .replaceAll(",", "");
-              final Decimal decAmount = NumberUtil .getRawAsUsableDecimal(_rawAmount)
+              final Decimal decAmount = NumberUtil.getRawAsUsableDecimal(_rawAmount);
               if (stringAmount == decAmount.toString()) {
                 _sendAmountController.text = stringAmount;
               } else {
@@ -326,7 +326,8 @@ class AppSendSheet {
             });
           }
         }
-      };
+      }
+    };
   }
 
   Function _onSendButtonPressed(BuildContext context, StateSetter setState) {
