@@ -384,14 +384,15 @@ class AppSendSheet {
   }
 
   Future<String> _scanQR(BuildContext context) async {
-    final value;
+    String value;
     try {
       UIUtil.cancelLockEvent();
       value = await BarcodeScanner.scan(
-        StateContainer.of(context).curTheme.qrScanTheme)
+        StateContainer.of(context).curTheme.qrScanTheme);
     } catch (e) {
-      if (e.code ==
-        BarcodeScanner.CameraAccessDenied) {
+      if (e.message == "Invalid envelope") {
+        // Pressed back button on Android
+      } else if (e.code ==  BarcodeScanner.CameraAccessDenied) {
         // TODO - Permission Denied to use camera
       } else {
         // UNKNOWN ERROR
