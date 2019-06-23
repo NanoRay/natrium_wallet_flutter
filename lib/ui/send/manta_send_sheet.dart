@@ -364,8 +364,8 @@ class AppSendSheet {
               .mainBottomSheet(context);
             }
         });
-      } else if (isManta(_sendAddressController.text)) {
-        MantaSendConfirmSheet(_sendAddressController.text).mainBottomSheet(context);
+      } else if (manta.isManta(_sendAddressController.text)) {
+        manta.MantaSendConfirmSheet(_sendAddressController.text).mainBottomSheet(context);
       } else if (validRequest) {
         AppSendConfirmSheet(
           _localCurrencyMode
