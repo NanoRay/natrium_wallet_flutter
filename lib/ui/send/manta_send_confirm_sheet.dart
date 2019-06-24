@@ -27,6 +27,10 @@ import 'package:natrium_wallet_flutter/ui/widgets/security.dart';
 
 final Logger log = new Logger("Manta");
 
+bool isManta(String candidate) {
+  return mwallet.MantaWallet.parseUrl(candidate) != null;
+}
+
 class MantaSendConfirmSheet {
   mwallet.MantaWallet _manta;
 
@@ -266,6 +270,15 @@ class MantaSendConfirmSheet {
     );
   }
 
+  Future<mmsg.PaymentRequestMessage> _getPaymentDetails() async {
+    await _manta.connect();
+    final mmsg.PaymentRequestEnvelope payReqEnv = await _manta.getPaymentRequest(
+      cryptoCurrency: "NANO");
+    final mmsg.PaymentRequestMessage payReq = payReqEnv.unpack();
+    log.info("Data: ${payReq.toJson()}");
+    return payReq;
+  }
+
   StatefulBuilder _modal(Widget child, {WillPopCallback onWillPop = null}) {
     // Show a widget as modal
     return StatefulBuilder(
@@ -294,17 +307,20 @@ class MantaSendConfirmSheet {
   mainBottomSheet(BuildContext context) async {
     final nav = Navigator.of(context);
     await _startLoadAnimation(context);
-    await _manta.connect();
-    final mmsg.PaymentRequestEnvelope payReqEnv = await _manta.getPaymentRequest(
-      cryptoCurrency: "NANO");
-    final mmsg.PaymentRequestMessage payReq = payReqEnv.unpack();
-    log.info("Data: ${payReq.toJson()}");
-    nav.pop();
-    AppSheets.showAppHeightNineSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return _modal(_safe(context, _confirmDialog(context, payReq)));
-      }
-    );
+    try {
+      log.info("Trying to connect to the server");
+      final payReq = await _getPaymentDetails().timeout(Duration(seconds: 10));
+      nav.pop();
+      AppSheets.showAppHeightNineSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return _modal(_safe(context, _confirmDialog(context, payReq)));
+        }
+      );
+    } catch (e) {
+      log.info("Connection failure");
+      nav.pop();
+      UIUtil.showSnackbar(AppLocalization.of(context).sendError, context);
+    }
   }
 }
