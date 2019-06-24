@@ -860,7 +860,36 @@ class AppSendSheet {
   } //************ Enter Address Container Method End ************//
   //*************************************************************//
 
-  mainBottomSheet(BuildContext context) {
+  Future mainBottomSheet(BuildContext context) async {
+    if (contact == null || address == null || quickSendAmount == null) {
+      // If there's no prefill, start QR acquisition
+      final String scanValue = await _scanQR(context);
+      if (scanValue != null) {
+        if (manta.isManta(scanValue)) {
+          manta.MantaSendConfirmSheet(scanValue).mainBottomSheet(context);
+          return;
+        } else {
+          Address address = Address(scanValue);
+          if (address.isValid()) {
+           final Contact contact = await sl.get<DBHelper>().getContactWithAddress(
+             address.address);
+           if (contact == null) {
+             this.address = address.address;
+           } else {
+             this.contact = contact;
+           }
+           // TODO: set amount? see _onScanQRButtonPressed
+          } else {
+            UIUtil.showSnackbar(
+              AppLocalization.of(context).qrInvalidAddress, context);
+          }
+        }
+      }
+    }
+    showAmountAndRecipentForm(context);
+  }
+
+  void showAmountAndRecipentForm(BuildContext context) {
     _sendAmountFocusNode = new FocusNode();
     _sendAddressFocusNode = new FocusNode();
     _sendAmountController = new TextEditingController();
