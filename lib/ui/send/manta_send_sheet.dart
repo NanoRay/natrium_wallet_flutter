@@ -1235,7 +1235,7 @@ class AppSendSheet {
                                   AppButtonType.PRIMARY,
                                   AppLocalization.of(context).send,
                                   Dimens.BUTTON_TOP_DIMENS,
-                                  onPressed: _onSendButtonPressed(context, setState),
+                                  onPressed: _onSendButtonPressed(context, setState)),
                             ],
                           ),
                           Row(
