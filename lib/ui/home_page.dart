@@ -23,7 +23,7 @@ import 'package:natrium_wallet_flutter/network/model/response/account_history_re
 import 'package:natrium_wallet_flutter/styles.dart';
 import 'package:natrium_wallet_flutter/app_icons.dart';
 import 'package:natrium_wallet_flutter/ui/contacts/add_contact.dart';
-import 'package:natrium_wallet_flutter/ui/send/send_sheet.dart';
+import 'package:natrium_wallet_flutter/ui/send/manta_send_sheet.dart';
 import 'package:natrium_wallet_flutter/ui/send/send_confirm_sheet.dart';
 import 'package:natrium_wallet_flutter/ui/send/send_complete_sheet.dart';
 import 'package:natrium_wallet_flutter/ui/receive/receive_sheet.dart';
