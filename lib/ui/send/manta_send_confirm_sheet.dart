@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:manta_dart/manta_wallet.dart' as mwallet;
 import 'package:manta_dart/messages.dart' as mmsg;
+import 'package:pointycastle/asymmetric/api.dart' show RSAPublicKey;
 
 import 'package:natrium_wallet_flutter/appstate_container.dart';
 import 'package:natrium_wallet_flutter/dimens.dart';
@@ -272,8 +273,13 @@ class MantaSendConfirmSheet {
 
   Future<mmsg.PaymentRequestMessage> _getPaymentDetails() async {
     await _manta.connect();
+    final RSAPublicKey cert = await _manta.getCertificate();
     final mmsg.PaymentRequestEnvelope payReqEnv = await _manta.getPaymentRequest(
       cryptoCurrency: "NANO");
+    if (!payReqEnv.verify(cert)) {
+      throw 'Certificate verification failure';
+    }
+    log.info("Payment request verified against certificate from Payment Processor");
     final mmsg.PaymentRequestMessage payReq = payReqEnv.unpack();
     log.info("Data: ${payReq.toJson()}");
     return payReq;
@@ -318,7 +324,7 @@ class MantaSendConfirmSheet {
         }
       );
     } catch (e) {
-      log.info("Connection failure");
+      log.info("Connection or certificate failure");
       nav.pop();
       UIUtil.showSnackbar(AppLocalization.of(context).sendError, context);
     }
