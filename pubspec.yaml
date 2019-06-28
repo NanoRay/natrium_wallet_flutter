@@ -118,7 +118,10 @@ dependencies:
   get_it: ^1.0.3+1
 
   manta_dart:
-    path: ../manta-dart
+    git:
+      url: git@github.com:NanoRay/manta-dart.git
+      ref: master
+#    path: ../manta-dart
 
 dev_dependencies:
   flutter_test:
