@@ -1,9 +1,8 @@
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:pointycastle/api.dart' show ParametersWithIV, KeyParameter;
 import 'package:pointycastle/stream/salsa20.dart';
-import 'package:flutter_nano_core/flutter_nano_core.dart';
+import 'package:nanodart/nanodart.dart';
 
 /**
  * Encryption using Salsa20 from pointycastle
@@ -39,15 +38,5 @@ class Salsa20Encryptor {
     final output = _cipher.process(input);
 
     return String.fromCharCodes(output);
-  }
-
-  static String generateEncryptionSecret(int length) {
-    String result = ""; // Resulting passcode
-    String chars = "abcdefghijklmnopqrstuvwxyz0123456789!?&+\\-'."; // Characters a passcode may contain
-    var rng = new Random.secure();
-    for (int i = 0; i < length; i ++) {
-      result += chars[rng.nextInt(chars.length)];
-    }
-    return result;
   }
 }

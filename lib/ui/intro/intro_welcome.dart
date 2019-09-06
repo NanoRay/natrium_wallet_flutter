@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_nano_core/flutter_nano_core.dart';
+import 'package:nanodart/nanodart.dart';
 import 'package:natrium_wallet_flutter/appstate_container.dart';
 import 'package:natrium_wallet_flutter/dimens.dart';
 import 'package:natrium_wallet_flutter/model/vault.dart';
 import 'package:natrium_wallet_flutter/service_locator.dart';
 import 'package:natrium_wallet_flutter/styles.dart';
 import 'package:natrium_wallet_flutter/localization.dart';
-import 'package:natrium_wallet_flutter/ui/util/routes.dart';
 import 'package:natrium_wallet_flutter/ui/widgets/auto_resize_text.dart';
 import 'package:natrium_wallet_flutter/ui/widgets/buttons.dart';
 import 'package:flare_flutter/flare_actor.dart';
@@ -86,7 +85,7 @@ class _IntroWelcomePageState extends State<IntroWelcomePage> {
                               NanoUtil().loginAccount(context).then((_) {
                                 StateContainer.of(context).requestUpdate();
                                 Navigator.of(context)
-                                    .pushNamed('/intro_backup_safety');
+                                    .pushNamed('/intro_password_on_launch');
                               });
                             });
                           }),
@@ -100,7 +99,7 @@ class _IntroWelcomePageState extends State<IntroWelcomePage> {
                               AppButtonType.PRIMARY_OUTLINE,
                               AppLocalization.of(context).importWallet,
                               Dimens.BUTTON_BOTTOM_DIMENS, onPressed: () {
-                            Navigator.of(context).pushNamed('/intro_import');
+                            Navigator.of(context).pushNamed('/intro_password_on_launch_fromimport');
                           }),
                         ],
                       ),

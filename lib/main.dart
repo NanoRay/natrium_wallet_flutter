@@ -2,13 +2,19 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 import 'package:natrium_wallet_flutter/ui/intro/intro_backup_safety.dart';
+import 'package:natrium_wallet_flutter/ui/intro/intro_password.dart';
+import 'package:natrium_wallet_flutter/ui/intro/intro_password_on_launch.dart';
+import 'package:natrium_wallet_flutter/ui/password_lock_screen.dart';
+import 'package:natrium_wallet_flutter/ui/widgets/dialog.dart';
+import 'package:natrium_wallet_flutter/util/caseconverter.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:flutter_nano_core/flutter_nano_core.dart';
+import 'package:nanodart/nanodart.dart';
 
 import 'package:natrium_wallet_flutter/styles.dart';
 import 'package:natrium_wallet_flutter/appstate_container.dart';
@@ -28,6 +34,7 @@ import 'package:natrium_wallet_flutter/model/db/contact.dart';
 import 'package:natrium_wallet_flutter/util/nanoutil.dart';
 import 'package:natrium_wallet_flutter/util/sharedprefsutil.dart';
 import 'package:natrium_wallet_flutter/util/legacyutil.dart';
+import 'package:root_checker/root_checker.dart';
 
 void main() async {
   // Setup Service Provide
@@ -38,7 +45,8 @@ void main() async {
     print('${rec.level.name}: ${rec.time}: ${rec.message}');
   });
   // Run app
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
     runApp(new StateContainer(child: new App()));
   });
 }
@@ -47,7 +55,6 @@ class App extends StatefulWidget {
   @override
   _AppState createState() => new _AppState();
 }
-
 
 class _AppState extends State<App> {
   @override
@@ -58,7 +65,8 @@ class _AppState extends State<App> {
   // This widget is the root of the application.
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(StateContainer.of(context).curTheme.statusBar);
+    SystemChrome.setSystemUIOverlayStyle(
+        StateContainer.of(context).curTheme.statusBar);
     return OKToast(
       textStyle: AppStyles.textStyleSnackbar(context),
       backgroundColor: StateContainer.of(context).curTheme.backgroundDark,
@@ -66,7 +74,8 @@ class _AppState extends State<App> {
         debugShowCheckedModeBanner: false,
         title: 'Natrium',
         theme: ThemeData(
-          dialogBackgroundColor: StateContainer.of(context).curTheme.backgroundDark,
+          dialogBackgroundColor:
+              StateContainer.of(context).curTheme.backgroundDark,
           primaryColor: StateContainer.of(context).curTheme.primary,
           accentColor: StateContainer.of(context).curTheme.primary10,
           backgroundColor: StateContainer.of(context).curTheme.backgroundDark,
@@ -76,9 +85,12 @@ class _AppState extends State<App> {
         localizationsDelegates: [
           AppLocalizationsDelegate(StateContainer.of(context).curLanguage),
           GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate
         ],
-        locale: StateContainer.of(context).curLanguage == null ? Locale('en') : StateContainer.of(context).curLanguage.getLocale(),
+        locale: StateContainer.of(context).curLanguage == null
+            ? Locale('en')
+            : StateContainer.of(context).curLanguage.getLocale(),
         supportedLocales: [
           const Locale('en', 'US'), // English
           const Locale('he', 'IL'), // Hebrew
@@ -102,8 +114,10 @@ class _AppState extends State<App> {
           const Locale('tl'), // Tagalog
           const Locale('tr'), // Turkish
           const Locale('vi'), // Vietnamese
-          const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'), // Chinese Simplified
-          const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'), // Chinese Traditional
+          const Locale.fromSubtags(
+              languageCode: 'zh', scriptCode: 'Hans'), // Chinese Simplified
+          const Locale.fromSubtags(
+              languageCode: 'zh', scriptCode: 'Hant'), // Chinese Traditional
           const Locale('ar'), // Arabic
           const Locale('lv'), // Latvian
           // Currency-default requires country included
@@ -174,7 +188,7 @@ class _AppState extends State<App> {
               return NoTransitionRoute(
                 builder: (_) => Splash(),
                 settings: settings,
-              ); 
+              );
             case '/home':
               return NoTransitionRoute(
                 builder: (_) => AppHomePage(),
@@ -188,6 +202,26 @@ class _AppState extends State<App> {
             case '/intro_welcome':
               return NoTransitionRoute(
                 builder: (_) => IntroWelcomePage(),
+                settings: settings,
+              );
+            case '/intro_password_on_launch':
+              return MaterialPageRoute(
+                builder: (_) => IntroPasswordOnLaunch(),
+                settings: settings,
+              );
+            case '/intro_password_on_launch_fromimport':
+              return MaterialPageRoute(
+                builder: (_) => IntroPasswordOnLaunch(comingFromImport: true),
+                settings: settings,
+              );
+            case '/intro_password':
+              return MaterialPageRoute(
+                builder: (_) => IntroPassword(),
+                settings: settings,
+              );
+            case '/intro_password_fromimport':
+              return MaterialPageRoute(
+                builder: (_) => IntroPassword(comingFromImport: true),
                 settings: settings,
               );
             case '/intro_backup':
@@ -214,12 +248,22 @@ class _AppState extends State<App> {
               return NoTransitionRoute(
                 builder: (_) => AppLockScreen(),
                 settings: settings,
-              );            
+              );
             case '/lock_screen_transition':
               return MaterialPageRoute(
                 builder: (_) => AppLockScreen(),
                 settings: settings,
-              );          
+              );
+            case '/password_lock_screen':
+              return NoTransitionRoute(
+                builder: (_) => AppPasswordLockScreen(),
+                settings: settings,
+              );
+            case '/password_lock_screen_transition':
+              return MaterialPageRoute(
+                builder: (_) => AppPasswordLockScreen(),
+                settings: settings,
+              );
             default:
               return null;
           }
@@ -237,7 +281,10 @@ class Splash extends StatefulWidget {
 }
 
 class SplashState extends State<Splash> with WidgetsBindingObserver {
- Future<bool> _doAndroidMigration() async {
+  bool _hasCheckedLoggedIn;
+  bool _retried;
+
+  Future<bool> _doAndroidMigration() async {
     bool migrated = false;
     // Migrate seed
     String legacySeed = await sl.get<LegacyMigration>().getLegacySeed();
@@ -253,7 +300,8 @@ class SplashState extends State<Splash> with WidgetsBindingObserver {
         await sl.get<Vault>().writePin(legacyPin);
       }
       // Migrate Contacts
-      String legacyContacts = await sl.get<LegacyMigration>().getLegacyContacts();
+      String legacyContacts =
+          await sl.get<LegacyMigration>().getLegacyContacts();
       if (legacyContacts != null) {
         Iterable contactsJson = json.decode(legacyContacts);
         List<Contact> contacts = List();
@@ -263,7 +311,9 @@ class SplashState extends State<Splash> with WidgetsBindingObserver {
         });
         for (Contact contact in contacts) {
           if (!await sl.get<DBHelper>().contactExistsWithName(contact.name) &&
-              !await sl.get<DBHelper>().contactExistsWithAddress(contact.address)) {
+              !await sl
+                  .get<DBHelper>()
+                  .contactExistsWithAddress(contact.address)) {
             // Contact doesnt exist, make sure name and address are valid
             if (Address(contact.address).isValid()) {
               if (contact.name.startsWith("@") && contact.name.length <= 20) {
@@ -279,6 +329,33 @@ class SplashState extends State<Splash> with WidgetsBindingObserver {
   }
 
   Future checkLoggedIn() async {
+    // Check if device is rooted or jailbroken, show user a warning informing them of the risks if so
+    if (!(await sl.get<SharedPrefsUtil>().getHasSeenRootWarning()) &&
+        (await RootChecker.isDeviceRooted)) {
+      AppDialogs.showConfirmDialog(
+          context,
+          CaseChange.toUpperCase(AppLocalization.of(context).warning, context),
+          AppLocalization.of(context).rootWarning,
+          AppLocalization.of(context).iUnderstandTheRisks.toUpperCase(),
+          () async {
+            await sl.get<SharedPrefsUtil>().setHasSeenRootWarning();
+            checkLoggedIn();
+          },
+          cancelText: AppLocalization.of(context).exit,
+          cancelAction: () {
+            if (Platform.isIOS) {
+              exit(0);
+            } else {
+              SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+            }
+          });
+      return;
+    }
+    if (!_hasCheckedLoggedIn) {
+      _hasCheckedLoggedIn = true;
+    } else {
+      return;
+    }
     try {
       // iOS key store is persistent, so if this is first launch then we will clear the keystore
       bool firstLaunch = await sl.get<SharedPrefsUtil>().getFirstLaunch();
@@ -312,7 +389,8 @@ class SplashState extends State<Splash> with WidgetsBindingObserver {
       }
 
       if (isLoggedIn) {
-        if (await sl.get<SharedPrefsUtil>().getLock() || await sl.get<SharedPrefsUtil>().shouldLock()) {
+        if (await sl.get<SharedPrefsUtil>().getLock() ||
+            await sl.get<SharedPrefsUtil>().shouldLock()) {
           Navigator.of(context).pushReplacementNamed('/lock_screen');
         } else {
           await NanoUtil().loginAccount(context);
@@ -325,7 +403,7 @@ class SplashState extends State<Splash> with WidgetsBindingObserver {
       /// Fallback secure storage
       /// A very small percentage of users are encountering issues writing to the
       /// Android keyStore using the flutter_secure_storage plugin.
-      /// 
+      ///
       /// Instead of telling them they are out of luck, this is an automatic "fallback"
       /// It will generate a 64-byte secret using the native android "bottlerocketstudios" Vault
       /// This secret is used to encrypt sensitive data and save it in SharedPreferences
@@ -337,16 +415,25 @@ class SplashState extends State<Splash> with WidgetsBindingObserver {
       } else {
         await sl.get<Vault>().deleteAll();
         await sl.get<SharedPrefsUtil>().deleteAll();
+        if (!_retried) {
+          _retried = true;
+          _hasCheckedLoggedIn = false;
+          checkLoggedIn();
+        }
       }
     }
   }
 
-
   @override
   void initState() {
     super.initState();
-    checkLoggedIn();
     WidgetsBinding.instance.addObserver(this);
+    _hasCheckedLoggedIn = false;
+    _retried = false;
+    if (SchedulerBinding.instance.schedulerPhase ==
+        SchedulerPhase.persistentCallbacks) {
+      SchedulerBinding.instance.addPostFrameCallback((_) => checkLoggedIn());
+    }
   }
 
   @override
@@ -380,14 +467,17 @@ class SplashState extends State<Splash> with WidgetsBindingObserver {
       setState(() {
         StateContainer.of(context).updateLanguage(setting);
       });
-    });    
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     // This seems to be the earliest place we can retrieve the device Locale
     setLanguage();
-    sl.get<SharedPrefsUtil>().getCurrency(StateContainer.of(context).deviceLocale).then((currency) {
+    sl
+        .get<SharedPrefsUtil>()
+        .getCurrency(StateContainer.of(context).deviceLocale)
+        .then((currency) {
       StateContainer.of(context).curCurrency = currency;
     });
     return new Scaffold(
