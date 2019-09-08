@@ -329,6 +329,7 @@ class AppSendSheet {
                                                               context)
                                                           .wallet
                                                           .getLocalCurrencyPrice(
+                                                            StateContainer.of(context).curCurrency,
                                                               locale: StateContainer
                                                                       .of(
                                                                           context)
@@ -734,6 +735,7 @@ class AppSendSheet {
       String balance;
       if (_localCurrencyMode) {
         balance = StateContainer.of(context).wallet.getLocalCurrencyPrice(
+          StateContainer.of(context).curCurrency,
             locale: StateContainer.of(context).currencyLocale);
       } else {
         balance = StateContainer.of(context)
@@ -1019,6 +1021,7 @@ class AppSendSheet {
                     String localAmount = StateContainer.of(context)
                         .wallet
                         .getLocalCurrencyPrice(
+                          StateContainer.of(context).curCurrency,
                             locale: StateContainer.of(context).currencyLocale);
                     localAmount = localAmount.replaceAll(
                         _localCurrencyFormat.symbols.GROUP_SEP, "");
