@@ -805,43 +805,43 @@ class AppSendSheet {
                   }
                   if (!_localCurrencyMode) {
                     _sendAmountController.text = StateContainer.of(context)
-                        .wallet
-                        .getAccountBalanceDisplay()
-                        .replaceAll(r",", "");
+                      .wallet
+                      .getAccountBalanceDisplay()
+                      .replaceAll(r",", "");
                     _sendAddressController.selection =
-                        TextSelection.fromPosition(TextPosition(
-                            offset: _sendAddressController.text.length));
+                      TextSelection.fromPosition(TextPosition(
+                        offset: _sendAddressController.text.length));
                   } else {
                     String localAmount = StateContainer.of(context)
-                        .wallet
+                      .wallet
                       .getLocalCurrencyPrice(
                         StateContainer.of(context).curCurrency,
                         locale: StateContainer.of(context).currencyLocale);
                     localAmount = localAmount.replaceAll(
-                        _localCurrencyFormat.symbols.GROUP_SEP, "");
+                      _localCurrencyFormat.symbols.GROUP_SEP, "");
                     localAmount = localAmount.replaceAll(
-                        _localCurrencyFormat.symbols.DECIMAL_SEP, ".");
+                      _localCurrencyFormat.symbols.DECIMAL_SEP, ".");
                     localAmount = NumberUtil.sanitizeNumber(localAmount)
-                        .replaceAll(
-                            ".", _localCurrencyFormat.symbols.DECIMAL_SEP);
+                      .replaceAll(
+                        ".", _localCurrencyFormat.symbols.DECIMAL_SEP);
                     _sendAmountController.text =
-                        _localCurrencyFormat.currencySymbol + localAmount;
+                      _localCurrencyFormat.currencySymbol + localAmount;
                     _sendAddressController.selection =
-                        TextSelection.fromPosition(TextPosition(
-                            offset: _sendAddressController.text.length));
+                      TextSelection.fromPosition(TextPosition(
+                        offset: _sendAddressController.text.length));
                   }
                 },
                 child: Icon(AppIcons.max,
-                    size: 24,
-                    color: StateContainer.of(context).curTheme.primary),
+                  size: 24,
+                  color: StateContainer.of(context).curTheme.primary),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(200.0)),
+                  borderRadius: BorderRadius.circular(200.0)),
               ),
             ),
             secondChild: SizedBox(),
             crossFadeState: _isMaxSend(context)
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
           ),
         ),
         keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -1077,8 +1077,8 @@ class AppSendSheet {
                                                   style: TextStyle(
                                                     color: StateContainer.of(
                                                             context)
-                                                        .curTheme
-                                                        .primary60,
+                                                      .curTheme
+                                                      .primary60,
                                                     fontSize: 14.0,
                                                     fontWeight: FontWeight.w100,
                                                     fontFamily: 'NunitoSans',
@@ -1096,10 +1096,9 @@ class AppSendSheet {
                                                         .wallet
                                                         .getAccountBalanceDisplay(),
                                                   style: TextStyle(
-                                                    color: StateContainer.of(
-                                                            context)
-                                                        .curTheme
-                                                        .primary60,
+                                                    color: StateContainer.of(context)
+                                                      .curTheme
+                                                      .primary60,
                                                     fontSize: 14.0,
                                                     fontWeight: FontWeight.w700,
                                                     fontFamily: 'NunitoSans',
@@ -1110,10 +1109,9 @@ class AppSendSheet {
                                                       ? ")"
                                                       : " NANO)",
                                                   style: TextStyle(
-                                                    color: StateContainer.of(
-                                                            context)
-                                                        .curTheme
-                                                        .primary60,
+                                                    color: StateContainer.of(context)
+                                                      .curTheme
+                                                      .primary60,
                                                     fontSize: 14.0,
                                                     fontWeight: FontWeight.w100,
                                                     fontFamily: 'NunitoSans',
