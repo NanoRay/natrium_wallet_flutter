@@ -135,7 +135,8 @@ class AppSendSheet {
       String balance;
       if (_localCurrencyMode) {
         balance = StateContainer.of(context).wallet.getLocalCurrencyPrice(
-            locale: StateContainer.of(context).currencyLocale);
+          StateContainer.of(context).curCurrency,
+          locale: StateContainer.of(context).currencyLocale);
       } else {
         balance = StateContainer.of(context)
             .wallet
@@ -813,8 +814,9 @@ class AppSendSheet {
                   } else {
                     String localAmount = StateContainer.of(context)
                         .wallet
-                        .getLocalCurrencyPrice(
-                            locale: StateContainer.of(context).currencyLocale);
+                      .getLocalCurrencyPrice(
+                        StateContainer.of(context).curCurrency,
+                        locale: StateContainer.of(context).currencyLocale);
                     localAmount = localAmount.replaceAll(
                         _localCurrencyFormat.symbols.GROUP_SEP, "");
                     localAmount = localAmount.replaceAll(
@@ -1084,18 +1086,15 @@ class AppSendSheet {
                                                 ),
                                                 TextSpan(
                                                   text: _localCurrencyMode
-                                                      ? StateContainer.of(
-                                                              context)
-                                                          .wallet
-                                                          .getLocalCurrencyPrice(
-                                                              locale: StateContainer
-                                                                      .of(
-                                                                          context)
-                                                                  .currencyLocale)
-                                                      : StateContainer.of(
-                                                              context)
-                                                          .wallet
-                                                          .getAccountBalanceDisplay(),
+                                                    ? StateContainer.of(context)
+                                                      .wallet
+                                                      .getLocalCurrencyPrice(
+                                                        StateContainer.of(context).curCurrency,
+                                                        locale: StateContainer.of(context)
+                                                          .currencyLocale)
+                                                      : StateContainer.of(context)
+                                                        .wallet
+                                                        .getAccountBalanceDisplay(),
                                                   style: TextStyle(
                                                     color: StateContainer.of(
                                                             context)
